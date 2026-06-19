@@ -42,25 +42,9 @@ Response fields:
 - `contributionCount`: contribution count when available.
 - `method`: `"graphql"` when `GITHUB_TOKEN` is configured, otherwise `"scrape"`.
 
-## Deploy Your Own Worker
+## Configuration
 
-The easiest way is the deploy button at the top of this README.
-
-Manual deploy:
-
-```bash
-npm install
-npx wrangler deploy
-```
-
-Optional: set a default timezone in `wrangler.toml`:
-
-```toml
-[vars]
-DEFAULT_TIMEZONE = "Asia/Kolkata"
-```
-
-Optional: set a default GitHub username if you want `/check` to work without a `username` query parameter:
+Set optional defaults in `wrangler.toml`:
 
 ```toml
 [vars]
@@ -70,18 +54,10 @@ DEFAULT_GITHUB_USERNAME = "your-github-username"
 
 ## Private Contributions
 
-Without a token, the Worker uses GitHub's public contribution calendar. That is easiest for a fun public project, but it only sees public contribution data.
-
-To include private contributions, create a GitHub personal access token that can read your contribution data and add it as a Cloudflare Worker secret:
+Without a token, the Worker only sees public contributions. To include private ones, add a GitHub personal access token as a Cloudflare Worker secret:
 
 ```bash
 npx wrangler secret put GITHUB_TOKEN
-```
-
-Then deploy again:
-
-```bash
-npx wrangler deploy
 ```
 
 ## iOS Shortcut Setup
