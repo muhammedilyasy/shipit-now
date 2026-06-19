@@ -633,7 +633,7 @@ function handleDashboard(request, env) {
       <form id="checkForm" onsubmit="runTest(event)">
         <div class="form-group">
           <label for="username">GitHub Username</label>
-          <input type="text" id="username" placeholder="e.g. muhammedilyasy" required>
+          <input type="text" id="username" placeholder="e.g. octocat" required>
         </div>
         <div class="form-group">
           <label for="date">Target Date (Optional)</label>
@@ -729,8 +729,9 @@ function handleDashboard(request, env) {
           <div class="step-content">
             <strong>Configure Personal Automations</strong>
             Add two Automations in the Shortcuts app:
-            - <strong>When Sleep Focus Turns On</strong>: Repeat 10 times: wait 60 seconds. Then Run Shortcut <code>ShipIt Checker</code>.
-            - <strong>When "Ship Check" Alarm is Dismissed</strong>: Run Shortcut <code>ShipIt Checker</code>.
+            - <strong>Basic mode</strong>: Time of Day → your bedtime → daily → Run Immediately → Run Shortcut <code>ShipIt Checker</code>.
+            - <strong>Optional hardcore mode</strong>: Alarm → Is Stopped → Any Alarm → Run Immediately → Run Shortcut <code>ShipIt Checker</code>.
+            - Hardcore mode may also run after normal alarms because iOS does not reliably target Shortcut-created alarms by label.
           </div>
         </div>
       </div>

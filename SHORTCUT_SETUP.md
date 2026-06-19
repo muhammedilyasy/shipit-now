@@ -1,10 +1,20 @@
 # ShipIt Checker iOS Shortcut Setup
 
-Use this API URL:
+First deploy your own Worker using the button in `README.md`.
+
+Then use your own API URL:
 
 ```text
-https://shipit-checker.muhammedilyasyp.workers.dev/check?username=muhammedilyasy&tz=Asia/Kolkata
+https://YOUR-WORKER.YOUR-SUBDOMAIN.workers.dev/check?username=YOUR_GITHUB_USERNAME&tz=YOUR_TIMEZONE
 ```
+
+Example format:
+
+```text
+https://your-worker.workers.dev/check?username=octocat&tz=Asia/Kolkata
+```
+
+Do not use someone else's demo Worker for daily use. Deploy your own so you do not share rate limits.
 
 ## Shortcut: ShipIt Checker
 
@@ -18,10 +28,10 @@ Add these actions in this exact order.
 
 ### 1. URL
 
-Paste:
+Paste your own Worker URL:
 
 ```text
-https://shipit-checker.muhammedilyasyp.workers.dev/check?username=muhammedilyasy&tz=Asia/Kolkata
+https://YOUR-WORKER.YOUR-SUBDOMAIN.workers.dev/check?username=YOUR_GITHUB_USERNAME&tz=YOUR_TIMEZONE
 ```
 
 ### 2. Get Contents of URL
@@ -36,7 +46,7 @@ Set the key to:
 shipped
 ```
 
-This action extracts `yes` or `no` from the API response.
+This extracts `yes` or `no` from the API response.
 
 ### 4. If
 
@@ -46,11 +56,7 @@ Set it like this:
 If Dictionary Value is no
 ```
 
-In Shortcuts, it may look like:
-
-```text
-If [Value from Dictionary] [is] [no]
-```
+If Shortcuts shows file size, MB, URL, or anything else, the If block is using the wrong input. Delete the If block, add it again directly after `Get Dictionary Value`, and select `Dictionary Value`.
 
 Everything between `If` and `Otherwise` happens when you did not ship.
 
@@ -102,9 +108,7 @@ Text:
 Streak safe. Sleep well.
 ```
 
-## Final Shape
-
-Your Shortcut should visually look like this:
+## Final Shortcut Shape
 
 ```text
 URL
@@ -121,30 +125,28 @@ Otherwise
 End If
 ```
 
-## Automation 1: Sleep Focus
+Nothing goes after `End If`.
+
+## Automation: Basic Mode
+
+This is the recommended setup.
 
 Create a Personal Automation:
 
 ```text
-When Sleep Focus turns on
-Run Immediately
+Time of Day
 ```
 
-Actions:
+Choose your bedtime, for example:
 
 ```text
-Repeat 10 times
-    Wait 60 seconds
-End Repeat
-Run Shortcut: ShipIt Checker
+11:00 PM
 ```
 
-## Automation 2: Alarm Dismissed
-
-Create another Personal Automation:
+Set:
 
 ```text
-When alarm Ship Check is dismissed
+Repeat Daily
 Run Immediately
 ```
 
@@ -154,12 +156,33 @@ Action:
 Run Shortcut: ShipIt Checker
 ```
 
+This checks once each night. If you have not shipped, it creates a `Ship Check` alarm.
+
+## Automation: Optional Hardcore Mode
+
+This tries to loop after alarms are stopped.
+
+Create another Personal Automation:
+
+```text
+Alarm
+Is Stopped
+Any Alarm
+Run Immediately
+```
+
+Action:
+
+```text
+Run Shortcut: ShipIt Checker
+```
+
+Warning: iOS does not provide a reliable "only when the alarm named Ship Check is stopped" trigger for alarms created by a Shortcut. `Any Alarm` can also run after normal alarms, so Hardcore Mode is optional.
+
 ## Important
 
-The alarm label must be exactly:
+The alarm label created by the Shortcut should be exactly:
 
 ```text
 Ship Check
 ```
-
-If the label is different, the alarm-dismissed automation will not loop correctly.

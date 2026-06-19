@@ -11,12 +11,13 @@ ShipIt Checker is a fun accountability setup:
 1. An iOS Shortcut calls a Cloudflare Worker.
 2. The Worker checks whether a GitHub user contributed today.
 3. If the response is `shipped: "no"`, the Shortcut creates an alarm named `Ship Check`.
-4. Optional hardcore mode can re-check when alarms are stopped.
+4. Basic mode checks once every night.
+5. Optional hardcore mode can re-check when alarms are stopped.
 
-Use the public demo endpoint for testing, but deploy your own Worker for daily use so you do not share rate limits with everyone else.
+Deploy your own Worker for daily use so you do not share rate limits with everyone else.
 
 ```text
-https://shipit-checker.muhammedilyasyp.workers.dev/check?username=YOUR_GITHUB_USERNAME&tz=YOUR_TIMEZONE
+https://YOUR-WORKER.YOUR-SUBDOMAIN.workers.dev/check?username=YOUR_GITHUB_USERNAME&tz=YOUR_TIMEZONE
 ```
 
 The Shortcut calls the Worker. The Worker checks GitHub's contribution calendar and returns:
@@ -35,7 +36,7 @@ or:
 }
 ```
 
-If the Shortcut receives `no`, it creates a `Ship Check` alarm. When that alarm is dismissed, an iOS Automation runs the Shortcut again.
+If the Shortcut receives `no`, it creates a `Ship Check` alarm.
 
 ## API
 
@@ -125,27 +126,31 @@ Actions:
 
 ## iOS Automations
 
-Create two Personal Automations.
+Apple does not let projects ship Personal Automations as a normal downloadable Shortcut. Users must create automations manually.
 
-Sleep trigger:
+Recommended basic mode:
 
-1. Trigger: Sleep Focus turns on.
-2. Set to Run Immediately.
-3. Repeat 10 times:
-   - Wait 60 seconds.
-4. Run Shortcut: `ShipIt Checker`.
+1. Trigger: Time of Day.
+2. Choose your bedtime, for example `11:00 PM`.
+3. Set it to repeat daily.
+4. Set to Run Immediately.
+5. Run Shortcut: `ShipIt Checker`.
 
-Snooze loop:
+Optional hardcore mode:
 
-1. Trigger: Alarm named `Ship Check` is dismissed.
-2. Set to Run Immediately.
-3. Run Shortcut: `ShipIt Checker`.
+1. Trigger: Alarm.
+2. Select `Is Stopped`.
+3. Select `Any Alarm`.
+4. Set to Run Immediately.
+5. Run Shortcut: `ShipIt Checker`.
+
+Hardcore mode may run after normal alarms too. That is an iOS Shortcuts limitation.
 
 ## Practical Notes
 
 - GitHub contributions can take a short time to appear.
 - The alarm loop depends on iOS Shortcuts and alarm automation behavior, so it is good for a fun accountability project, not a security system.
-- Keep the alarm name exactly `Ship Check`; the automation depends on it.
+- Keep the alarm name exactly `Ship Check`.
 - If your day boundary matters, pass `tz=Your/Timezone` or have the Shortcut pass `date=yyyy-MM-dd`.
 - iOS does not let projects distribute Personal Automations as a normal downloadable Shortcut. Users can install the Shortcut, but they must create automations manually.
 - Hardcore mode uses iOS's `Any Alarm` stopped trigger, which may also run after normal alarms. Treat it as optional.
